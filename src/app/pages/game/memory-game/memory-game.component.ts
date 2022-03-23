@@ -37,7 +37,7 @@ export class MemoryGameComponent implements OnInit {
   icons: any;
   realArray:any = [];
   constructor(private route: ActivatedRoute) { 
-    this.route.params.subscribe(res => {
+    this.route.params.subscribe((res:any) => {
       this.type = res['slug'];
 
       this.shuffleIcons('',this.type)
