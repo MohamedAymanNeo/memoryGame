@@ -1,14 +1,14 @@
 <div class='info'>
     <p>Time: <span class='minutes'>00</span>:<span class='seconds'>00</span></p>
     <p>Moves: <span class='moves'>0</span></p>
-    <p><i class="fas fa-redo restart" style='cursor:pointer'></i></p>
+    <p><i class="fas fa-redo restart" (click)="restart()" style='cursor:pointer'></i></p>
   </div>
   <div class="wrapper">
     <!-- <ul>
       <li *ngFor="let item of realArray">{{item}}</li>
     </ul> -->
-      <ng-container *ngFor="let item of realArray">
-          <div class="card flip" id="{{item}}" #ref (click)="startGame(item,ref)">
+      <ng-container *ngFor="let item of realArray;let i = index">
+          <div class="card flip" id="{{item}}" #ref (click)="startGame(item,ref,i)">
             <img width="70px" height="70px" [src]="'assets/images/'+type+'/'+item+'.png'" class="image"/>
           </div>
           
@@ -18,6 +18,6 @@
     <p>Congratulation</p>
     <p>Your Time Is : <span class='minutes'></span>:<span class='seconds'></span></p>
     <p> Your Total Moves is : <span class='moves'></span></p>
-    <button class='restart'>Play Again</button>
+    <button class='restart' (click)="restart()">Play Again</button>
   </div>
   
