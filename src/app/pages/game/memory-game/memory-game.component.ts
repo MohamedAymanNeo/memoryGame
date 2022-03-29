@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 declare var $: any;
 @Component({
@@ -6,6 +6,7 @@ declare var $: any;
   templateUrl: './memory-game.component.html',
 })
 export class MemoryGameComponent implements OnInit {
+  @ViewChild('info', { static: true }) info!: ElementRef;
   @ViewChildren("ref", { read: ElementRef })
   cardRef!: QueryList<ElementRef<HTMLParagraphElement>>;
   type: any;
@@ -82,54 +83,8 @@ export class MemoryGameComponent implements OnInit {
       }
 
     }, 1000);
-
-    $('.info').fadeIn();
+    this.info.nativeElement.classList.add('fadeIn');
   }
-  checkCard(cardName:any, cardRef:any, cardIndex:any) {
-    // debugger
-    console.log(this.firstClick);
-    
-    if(this.firstClick) {
-      this.firstRef = cardRef;
-      this.firstIndex = cardIndex;
-      this.firstCardName = cardName;
-      this.firstClick = false;
-      cardRef.classList.remove('flip');
-      cardRef.classList.add('show'); // show card
-    } else {
-      cardRef.classList.remove('flip');
-      cardRef.classList.add('show'); // show card
-
-      setTimeout(() => {
-        this.checkSuccess(this.firstRef,cardRef,this.firstCardName,cardName);
-      }, 700);
-    }
-  }
-  checkSuccess(firstCard?:any, secondCard?: any,firstCardName?:any, secondCardName?:any ) {
-    // debugger;
-    console.log('---------------------');
-    
-    console.log(firstCard);
-    console.log(secondCard);
-    console.log(firstCardName);
-    console.log(secondCardName);
-    if(firstCardName != secondCardName) {
-      firstCard.classList.remove('show');
-      firstCard.classList.add('flip'); // hide card
-      secondCard.classList.remove('show');
-      secondCard.classList.add('flip'); // hide card
-    } else {
-      firstCard.classList.remove('show')
-      firstCard.classList.add('succes')
-      secondCard.classList.remove('show')
-      secondCard.classList.add('succes')
-      this.m += 1;
-      // --------- progress for displaying win message ---------
-      this.progress += 2;
-    }
-  }
-  
-  // secondClick: any = 0;
   startGame(item?: any, myRef?: any, myIndex?: any) {
     if(this.oneTimeIf) {
       this.oneTimeIf = false
@@ -139,7 +94,7 @@ export class MemoryGameComponent implements OnInit {
     if (!myRef.classList.contains('succes', 'show')) {
       // console.log('hi');
       this.ele = myIndex; // checkeing depend on fliped ele index
-      console.log(this.ele);
+      // console.log(this.ele);
       
       if (this.i == 0) { // pushing first card index
         this.x.push(this.ele);
@@ -157,16 +112,13 @@ export class MemoryGameComponent implements OnInit {
         // this time out makes transition complete befor adding or remove classes
         // and solve quick clicking bugs
         
-        // console.log(document.querySelectorAll(`#${item}`)[0].getAttribute("data-checked"));
-        console.log($('.card').eq(this.x[this.m]).data('checked'));
-        console.log($('.card').eq(this.y[this.m]).data('checked'));
-        
         setTimeout(() => {
-          if(this.ele != this.ele) {
-            
-          }
-          if ($('.card').eq(this.x[this.m]).data('checked') == $('.card').eq(this.y[this.m]).data('checked')) {
-            console.log("-------",$('.card').eq(this.x[this.m]).data('checked'), $('.card').eq(this.y[this.m]).data('checked'));
+          console.log(this.x);
+          console.log(this.y);
+          
+          if (($('.card').eq(this.x[this.m]).data('checked') ==
+             $('.card').eq(this.y[this.m]).data('checked') && (this.x[this.m] != this.y[this.m]) )) 
+             {
             $('.card').eq(this.x[this.m]).removeClass('show').addClass('succes');
             $('.card').eq(this.y[this.m]).removeClass('show').addClass('succes');
             this.m += 1;
@@ -183,8 +135,8 @@ export class MemoryGameComponent implements OnInit {
           if (this.progress == 16) {
           
             clearInterval(this.clearInt); // stop Time Counter
-            setTimeout(function () {
-              $('.info').fadeOut();
+            setTimeout( () => {
+              this.info.nativeElement.classList.remove('fadeIn');
               $('.result').fadeIn(1000);
             }, 700);
             
@@ -199,15 +151,17 @@ export class MemoryGameComponent implements OnInit {
   restart() {
     this.shuffleIcons('', this.type);
     // this.startGame()
-    $('.info').hide();
+    this.info.nativeElement.classList.remove('fadeIn');
     this.oneTimeIf = true;
     this.firstRef = null;
     this.moves = 0;
+    this.x= [];
+    this.y= [];
     this.progress = 0;
     this.cardRef.map((item) => {
-      console.log(item);
       item.nativeElement.classList.remove('succes');
       item.nativeElement.classList.add('flip');
+      item.nativeElement.removeAttribute("data-checked")
     })
     this.m = 0;
     clearInterval(this.clearInt);
