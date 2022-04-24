@@ -95,7 +95,7 @@ body {
       right:5%;
       transform: rotateY(-45deg);
       animation:upDown .5s linear alternate infinite;
-    display:none;
+      display:none;
       p {
           font:900 18px cursive;
       }
@@ -144,6 +144,10 @@ body {
       text-decoration: none;
       color:#EF767A;
     }
+  }
+
+  .fadeIn {
+    display: block;
   }
 
 
