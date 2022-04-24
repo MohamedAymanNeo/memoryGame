@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 declare var $: any;
 @Component({
@@ -8,6 +8,7 @@ declare var $: any;
 export class MemoryGameComponent implements OnInit {
   @ViewChildren("ref", { read: ElementRef })
   cardRef!: QueryList<ElementRef<HTMLParagraphElement>>;
+  @ViewChild("gameBox") gameBox!: ElementRef;
   type: any;
   x: any = []; // first card index
   y: any = []; // second card index
@@ -31,6 +32,7 @@ export class MemoryGameComponent implements OnInit {
   firstIndex: any;
   firstCardName: any;
   firstClick: boolean = true;
+  duration = 1000;
   animalsIcons: any = [
     { type: 'social', icons: ['facebook', 'youtube', 'instagram', 'codepen', 'linkedin', 'twitter', 'twitch', 'github', 'facebook', 'youtube', 'instagram', 'codepen', 'linkedin', 'twitter', 'twitch', 'github'] },
     { type: 'numbers', icons: ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight'] }
@@ -245,4 +247,16 @@ export class MemoryGameComponent implements OnInit {
         break;
     }
   }
+ 
+  // Stop Clicking Function
+ stopClicking() {
+  // Add Class No Clicking on Main Container
+  this.gameBox.nativeElement.classList.add("no-clicking");
+
+  // Wait Duration
+  setTimeout(() => {
+    // Remove Class No Clicking After The Duration
+    this.gameBox.nativeElement.classList.remove("no-clicking");
+  }, this.duration);
+}
 }
