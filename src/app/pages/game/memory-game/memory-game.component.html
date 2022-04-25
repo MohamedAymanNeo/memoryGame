@@ -1,23 +1,43 @@
-<div class='info' #info>
-    <p>Time: <span class='minutes'>00</span>:<span class='seconds'>00</span></p>
-    <p>Moves: <span class='moves'>0</span></p>
-    <p><i class="fas fa-redo restart" (click)="restart()" style='cursor:pointer'></i></p>
+<div class="memoryGame">
+  <div class="memoryGame-header">
+    <h2 class="name">Mohamed</h2>
+    <i class="far fa-lightbulb hint" (click)="hint($event)" style='cursor:pointer'></i>
   </div>
-  <div class="memory-game-blocks" #gameBox>
-    <!-- <ul>
-      <li *ngFor="let item of realArray">{{item}}</li>
-    </ul> -->
+  <div class="memoryGame-body">
+    <div class="memory-game-blocks" #gameBox>
       <ng-container *ngFor="let item of realArray;let i = index">
-          <div class="card flip" id="{{item}}" #ref (click)="startGame(item,ref,i)">
-            <img width="70px" height="70px" [src]="'assets/images/'+type+'/'+item+'.png'" class="image"/>
+        <div class="card" id="{{item}}" #ref>
+          <div class="face front"></div>
+          <div class="face back">
+            <img [src]="'assets/images/'+type+'/'+item+'.png'" class="image"/>
           </div>
-          
+        </div>  
       </ng-container>
+    </div>
   </div>
-  <div class='result'>
+  <div class="memoryGame-footer">
+    <i class="fas fa-redo restart" (click)="restart()" style='cursor:pointer'></i>
+    <p>Moves: <span class='moves' #movesCount>0</span></p>
+    <p><i class="fas fa-stopwatch"></i> <span class='minutes' #minutes>00</span>:<span class='seconds' #seconds>00</span></p>
+  </div>
+</div>
+
+
+<!-- <div class='info' #info>
+    
+    
+    <p>
+      
+      
+    </p>
+  </div> -->
+  
+  <!-- <div class='result'>
     <p>Congratulation</p>
     <p>Your Time Is : <span class='minutes'></span>:<span class='seconds'></span></p>
-    <p> Your Total Moves is : <span class='moves'></span></p>
+    <p> Your Total Moves is : <span class='moves' ></span></p>
     <button class='restart' (click)="restart()">Play Again</button>
-  </div>
+  </div> -->
+  <audio #success src="assets/audio/sucsses1.mp3" preload="auto"></audio>
+  <audio #fail src="assets/audio/fail2.mp3" preload="auto"></audio>
   
