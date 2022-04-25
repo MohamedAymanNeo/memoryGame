@@ -10,29 +10,25 @@ export class MemoryGameComponent implements OnInit {
   @ViewChildren("ref", { read: ElementRef })
   cardRef!: QueryList<ElementRef<HTMLParagraphElement>>;
   @ViewChild("gameBox") gameBox!: ElementRef;
+  @ViewChild("success") success!: ElementRef;
+  @ViewChild("fail") fail!: ElementRef;
+  @ViewChild("movesCount") movesCount!: ElementRef;
+  @ViewChild("seconds") seconds!: ElementRef;
+  @ViewChild("minutes") minutes!: ElementRef;
   type: any;
-  x: any = []; // first card index
-  y: any = []; // second card index
-  m: any = 0;
-  i: any = 0;
+
   gameStart: boolean = true;
   shuffleNumber: any = 0;
-  ele: any;
   moves: any = 0;
   oneTimeIf: any = true;
   timeNow: any;
   clearInt: any;
-  seconds: any;
-  minutes: any;
-  progress: any = 0;
   time: any;
+  secondsNumber:any;
+  minutesNumber: any;
   socialIcons: any = [];
   numbersIcons: any = [];
   FlagsIcons: any = [];
-  firstRef: any;
-  firstIndex: any;
-  firstCardName: any;
-  firstClick: boolean = true;
   duration = 1000;
   animalsIcons: any = [
     { type: 'social', icons: ['facebook', 'youtube', 'instagram', 'codepen', 'linkedin', 'twitter', 'twitch', 'github', 'facebook', 'youtube', 'instagram', 'codepen', 'linkedin', 'twitter', 'twitch', 'github'] },
@@ -46,16 +42,13 @@ export class MemoryGameComponent implements OnInit {
   constructor(private route: ActivatedRoute) {
     this.route.params.subscribe((res: any) => {
       this.type = res['slug'];
-
-      this.shuffleIcons('', this.type)
-      // this.chooseType(this.type);
+      this.shuffleIcons(this.type)
     });
-
-
+    
   }
-
+  
   ngAfterViewInit(): void {
-
+    this.cardsEvent(this.gameBox)
   }
 
   ngOnInit(): void {
@@ -67,150 +60,124 @@ export class MemoryGameComponent implements OnInit {
     this.timeNow = new Date().getTime();
 
     this.clearInt = setInterval(() => {
-
       this.time = new Date().getTime() - this.timeNow;
-      this.seconds = Math.floor((this.time / 1000) % 60);
-      this.minutes = Math.floor((this.time / 1000) / 60);
+      this.secondsNumber = Math.floor((this.time / 1000) % 60);
+      this.minutesNumber = Math.floor((this.time / 1000) / 60);
+      // Seconds
+      this.secondsNumber < 10 ?
+      this.seconds.nativeElement.innerText = `0${this.secondsNumber}` :
+      this.seconds.nativeElement.innerText = this.secondsNumber;
+      // Minutes
+      this.minutesNumber < 10 ?
+      this.minutes.nativeElement.innerText = `0${this.minutesNumber}` :
+      this.minutes.nativeElement.innerText = this.minutesNumber;
 
-      if (this.seconds < 10) {
-        $('.seconds').text('0' + this.seconds);
-      } else {
-        $('.seconds').text(this.seconds);
-      }
-
-      if (this.minutes < 10) {
-        $('.minutes').text('0' + this.minutes);
-      } else {
-        $('.minutes').text(this.minutes);
-      }
-
+      this.minutesNumber == 11 ? this.restart(): null
     }, 1000);
-    this.info.nativeElement.classList.add('fadeIn');
+    // this.info.nativeElement.classList.add('fadeIn');
   }
-  startGame(item?: any, myRef?: any, myIndex?: any) {
-    if(this.oneTimeIf) {
-      this.oneTimeIf = false
-      this.startTimer()
-    }
-    // perform only on not solved cards or not showed cards
-    if (!myRef.classList.contains('succes', 'show')) {
-      // console.log('hi');
-      this.ele = myIndex; // checkeing depend on fliped ele index
-      // console.log(this.ele);
-      
-      if (this.i == 0) { // pushing first card index
-        this.x.push(this.ele);
-        this.i = 1;
-      } else { // pushing second card index
-        this.y.push(this.ele); 
-        this.i = 0;
-      }
-      eval(myRef).classList.remove('flip')
-      eval(myRef).classList.add('show')
-      eval(myRef).setAttribute("data-checked", item );
-      if(this.x.length == this.y.length) { // start comparing
-        this.moves += 1; // for moves counter
-        $('.moves').text(this.moves); // diplay moves in Document
-        // this time out makes transition complete befor adding or remove classes
-        // and solve quick clicking bugs
-        
-        setTimeout(() => {
-          console.log(this.x);
-          console.log(this.y);
-          
-          if (($('.card').eq(this.x[this.m]).data('checked') ==
-             $('.card').eq(this.y[this.m]).data('checked') && (this.x[this.m] != this.y[this.m]) )) 
-             {
-            $('.card').eq(this.x[this.m]).removeClass('show').addClass('succes');
-            $('.card').eq(this.y[this.m]).removeClass('show').addClass('succes');
-            this.m += 1;
-            // --------- progress for displaying win message ---------
-            this.progress += 2;
-  
-          } else {
-  
-            $('.card').eq(this.x[this.m]).removeClass('show').addClass('flip');
-            $('.card').eq(this.y[this.m]).removeClass('show').addClass('flip');
-            this.m += 1;
-  
-          }
-          if (this.progress == 16) {
-          
-            clearInterval(this.clearInt); // stop Time Counter
-            setTimeout( () => {
-              this.info.nativeElement.classList.remove('fadeIn');
-              $('.result').fadeIn(1000);
-            }, 700);
-            
-          }
 
-        }, 700);
-      }
-    }
-  }
   // ---------------------------- Restart --------------------
   // all about resetting
   restart() {
-    this.shuffleIcons('', this.type);
-    // this.startGame()
-    this.info.nativeElement.classList.remove('fadeIn');
-    this.oneTimeIf = true;
-    this.firstRef = null;
-    this.moves = 0;
-    this.x= [];
-    this.y= [];
-    this.progress = 0;
-    this.cardRef.map((item) => {
-      item.nativeElement.classList.remove('succes');
-      item.nativeElement.classList.add('flip');
-      item.nativeElement.removeAttribute("data-checked")
-    })
-    this.m = 0;
-    clearInterval(this.clearInt);
-
-    $('.result').fadeOut(1000);
-    $('.minutes').text('00');
-    $('.seconds').text('00');
-    $('.moves').text('0');
+    window.location.reload()
+    // this.cardsEvent(this.gameBox)
+    // this.shuffleIcons(this.type);
+    // this.oneTimeIf = true;
+    // this.moves = 0;
+    
+    // clearInterval(this.clearInt);
+    // $('.result').fadeOut(1000);
+    // this.seconds.nativeElement.innerText = '00';
+    // this.minutes.nativeElement.innerText = '00';
+    // $('.moves').text('0');
+    // this.cardRef.forEach((item) => {
+    //   (item.nativeElement.classList.contains('is-flipped') ||
+    //   item.nativeElement.classList.contains('has-matched')) ? 
+    //   (item.nativeElement.classList.remove('is-flipped') && ) : ''
+    // })
+    // console.log(this.cardRef);
+    
+    // this..filter((filteredCard:any) => {
+    //   return filteredCard.classList.contains('is-flipped')
+    // })
   }
-  shuffleIcons(passedArr?: any, type?: any) {   // shuffling
+  shuffleIcons(type?: any) {   // shuffling
     this.animalsIcons.map((item: any, index: any) => {
       if (item.type == type) {
         this.realArray = item.icons.sort(() => Math.random() - 0.5)
-        console.log(this.realArray);
-
       }
     })
   }
-
-  chooseType(type: any) {
-    switch (type) {
-      case 'social':
-
-        // this.socialIcons = ['facebook', 'youtube', 'instagram', 'codepen', 'linkedin', 'twitter', 'twitch', 'github', 'facebook', 'youtube', 'instagram', 'codepen', 'linkedin', 'twitter', 'twitch', 'github'];
-        // this.realArray = this.socialIcons;
-        // this.shuffle(this.realArray,type)
-        break;
-      case 'numbers':
-        // this.numbersIcons = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight'];
-        // this.realArray = this.numbersIcons;
-        // this.shuffle(this.realArray,type)
-        break;
-
-      default:
-        break;
+  //  add CLick for eachcard 
+  cardsEvent(gameBox:any) {    
+    let gameBoxBlocks = Array.from(gameBox.nativeElement.children)
+    gameBoxBlocks.forEach((blockItem:any)=> {
+      blockItem.addEventListener("click",  () => {
+        // Trigger The Flip Block Function
+        if(this.oneTimeIf) {
+          this.oneTimeIf = false
+          this.startTimer()
+        }
+        this.flipCard(blockItem,gameBoxBlocks);
+      });
+    })
+    
+  }
+  flipCard(selectedCard:any,originalBlocks:any) {
+    
+    selectedCard.classList.add('is-flipped')
+    let AllFlippedCards = originalBlocks.filter((filteredCard:any) => {
+      return filteredCard.classList.contains('is-flipped')
+    })
+    if(AllFlippedCards.length == 2) {
+      
+      this.stopClicking();
+      // Check Matched Block Function
+      this.checkMatchedBlocks(AllFlippedCards[0], AllFlippedCards[1]);
     }
   }
- 
-  // Stop Clicking Function
- stopClicking() {
-  // Add Class No Clicking on Main Container
-  this.gameBox.nativeElement.classList.add("no-clicking");
+  // Check Matched Block
+  checkMatchedBlocks(firstBlock:any, secondBlock:any) {
+    // let triesElement = document.querySelector(".tries span");
+    if (firstBlock.id === secondBlock.id) {
+      firstBlock.classList.remove("is-flipped");
+      secondBlock.classList.remove("is-flipped");
 
-  // Wait Duration
-  setTimeout(() => {
-    // Remove Class No Clicking After The Duration
-    this.gameBox.nativeElement.classList.remove("no-clicking");
-  }, this.duration);
-}
+      firstBlock.classList.add("has-match");
+      secondBlock.classList.add("has-match");
+      this.success.nativeElement.play()
+    } else {
+      this.moves += 1; // for moves counter
+      this.movesCount.nativeElement.innerHTML = this.moves;
+      setTimeout(() => {
+        firstBlock.classList.remove("is-flipped");
+        secondBlock.classList.remove("is-flipped");
+      }, this.duration);
+      this.fail.nativeElement.play()
+
+    }
+  }
+    // Stop Clicking Function
+  stopClicking() {
+    // Add Class No Clicking on Main Container
+    this.gameBox.nativeElement.classList.add("no-clicking");
+
+    // Wait Duration
+    setTimeout(() => {
+      // Remove Class No Clicking After The Duration
+      this.gameBox.nativeElement.classList.remove("no-clicking");
+    }, this.duration);
+  }
+
+  hint(e:any) {
+    let blocks = document.querySelectorAll(".card");
+    blocks.forEach((block) => {
+      block.classList.add("is-flipped");
+      setTimeout(() => {
+        block.classList.remove("is-flipped");
+      }, 2000);
+    });
+    e.target.classList.add("disable");
+  }
 }
