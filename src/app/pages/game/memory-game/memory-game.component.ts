@@ -81,26 +81,6 @@ export class MemoryGameComponent implements OnInit {
   // all about resetting
   restart() {
     window.location.reload()
-    // this.cardsEvent(this.gameBox)
-    // this.shuffleIcons(this.type);
-    // this.oneTimeIf = true;
-    // this.moves = 0;
-    
-    // clearInterval(this.clearInt);
-    // $('.result').fadeOut(1000);
-    // this.seconds.nativeElement.innerText = '00';
-    // this.minutes.nativeElement.innerText = '00';
-    // $('.moves').text('0');
-    // this.cardRef.forEach((item) => {
-    //   (item.nativeElement.classList.contains('is-flipped') ||
-    //   item.nativeElement.classList.contains('has-matched')) ? 
-    //   (item.nativeElement.classList.remove('is-flipped') && ) : ''
-    // })
-    // console.log(this.cardRef);
-    
-    // this..filter((filteredCard:any) => {
-    //   return filteredCard.classList.contains('is-flipped')
-    // })
   }
   shuffleIcons(type?: any) {   // shuffling
     this.animalsIcons.map((item: any, index: any) => {

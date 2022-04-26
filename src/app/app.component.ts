@@ -14,7 +14,7 @@ import {
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'toDoList';
+  title = 'Memory Game';
   data:any = []
   constructor(public auth: Auth,public firestore :Firestore) {
     // this.getData()
