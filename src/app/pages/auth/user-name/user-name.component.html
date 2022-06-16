@@ -1,9 +1,7 @@
 <div class="userName">
     <h1 class="userName-title">Memory Game</h1>
     <form class="userName-loginForm" #loginForm="ngForm" (ngSubmit)="addData(loginForm.value)">
-        <div class="input-fields">
-            <input name="name" ngModel placeholder="Name" required id="name" type="text" class="input-field" />
-        </div>
-        <button>Login</button>
+        <input name="name" ngModel placeholder="Name" required id="name" type="text" class="input-field" />
+        <button class="btnLogin">Login</button>
     </form>
 </div>

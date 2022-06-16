@@ -4,15 +4,78 @@
 }
 
 body {
-    background:#0B2239;
-    color: #EEE;
-    perspective: 1000px;
+  background:#0B2239;
+  color: #EEE;
+  perspective: 1000px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  // min-height: -webkit-fill-available;
+}
+
+.gameContainer {
+  width: 700px;
+  background: #1AA27D;
+  height: 700px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.userName {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  &-title {
+    margin-bottom: 30px;
+  }
+  &-loginForm {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    min-height: -webkit-fill-available;
+    .input-field {
+      background: transparent;
+      outline: none;
+      border: 1px solid #FFF;
+      color: #FFF;
+      min-width: 300px;
+      border-radius: 8px;
+      height: 30px;
+      text-indent: 10px;
+      margin-bottom: 20px;
+      transition: all 0.5s ease-in-out;
+      &:focus {
+        border-radius: 50px;
+      }
+      &::placeholder {
+        color:#FFF;
+      }
+    }
+    .btnLogin {
+      appearance: none;
+      outline: none;
+      border: 1px dashed #FFF;
+      background: transparent;
+      color: #FFF;
+      min-width: 180px;
+      height: 40px;
+      border-radius: 50px;
+      transition: all 0.5s ease-in-out;
+  
+      &:hover {
+        background: #FFF;
+        color: #4AD395;
+        cursor: pointer;
+      }
+    }
   }
+
+
+}
 
 .memoryGame {
   display: flex;
